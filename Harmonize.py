@@ -13,8 +13,8 @@ import imageio
 import os
 import matplotlib.pyplot as plt
 import seaborn as sns; sns.set(style="ticks", color_codes=True,font_scale=1.75)
-arrayid = int(os.environ['SLURM_ARRAY_TASK_ID'])
-#arrayid = 40 # 40
+#arrayid = int(os.environ['SLURM_ARRAY_TASK_ID'])
+arrayid = 40 # 40
 
 def get_qc_pixel(qcpath,i,j,r,c,z):
     QC = np.zeros([r,c,z])
@@ -68,23 +68,22 @@ def get_3d_sr(srpath,Btag,i_band,i,j):
     print(QC)
     return sr_3d, date, QC
 
-
 def Harmanization(x,sensor, band_tag, i_band):
     if sensor==8:
         if band_tag==0: #B321
             if i_band==0: # red
-                xh = 0.0029 + 1.0729*(x)-0.4268*(x**2)
+                xh = -0.0012 + 1.1592*(x)-0.9166*(x**2)+1.8795*(x**3)
             elif i_band==1: # green
-                xh = 0.0092 + 0.7465*(x)+3.0334*(x**2)-10.6023*(x**3)
+                xh = -0.0005 + 1.0412*(x)
             elif i_band==2: # blue
-                xh = 0.0119 + 0.7782*(x)+4.0941*(x**2)-22.12*(x**3)
+                xh = 0.0042 + 1.095*(x) -0.4681(x**2)
         elif band_tag==1: #'B754': 
             if i_band==0: #swir2
-                xh = 0.0027 + 0.9058*(x) + 0.589*(x**2)-0.9552*(x**3)
+                xh = 0.0028 + 0.9212*(x) + 0.5277*(x**2)-0.8244*(x**3)
             elif i_band==1: # swir1
-                xh = 0.0059 + 0.9681*(x) + 0.547*(x**2)
+                xh = 0.0071 + 0.9698*(x) + 0.0685*(x**2)
             elif i_band==2: #nir
-                xh = 0.0167 + 0.9068*(x) - 0.0992*(x**2) + 0.1113*(x**3)
+                xh = 0.0221 + 0.8442*(x) + 0.1811*(x**2)
         elif band_tag==2: #'B6':
             if i_band==0: # sr.b6
                 xh = x.copy()
@@ -93,31 +92,32 @@ def Harmanization(x,sensor, band_tag, i_band):
     elif sensor==5:
         if band_tag==0:#B321':
             if i_band==0: # red
-                xh = -0.0035 + 0.8783*(x) + 1.5849*(x**2) - 5.8961*(x**3)
+                xh = -0.0068 + 1.0075*(x)
             elif i_band==1: # green
-                xh = 0.0048 + 0.6984*(x) + 2.0075*(x**2) - 3.9285*(x**3)
+                xh = -0.0011 + 0.8733*(x) + 0.3266*(x**2)
             elif i_band==2: # blue
-                xh = 0.0105 + 0.2583*(x) + 10.7637*(x**2) - 48.0339*(x**3)
+                xh = -0.0007 + 0.8288*(x) + 1.8833*(x**2) - 6.0679*(x**3)
         elif band_tag == 1:#'B754': 
             if i_band==0: #swir2
-                xh = 0.0027 + 0.9151*(x) + 0.5465*(x**2) - 1.0338*(x**3)
+                xh = 0.0025 + 0.924*(x) + 0.3858*(x**2) - 0.5121*(x**3)
             elif i_band==1: # swir1
-                xh = 0.0024 + 0.9593*(x) + 0.066*(x**2)
+                xh = 0.001 + 0.9791*(x)
             elif i_band==2: #nir
-                xh = 0.0108 + 0.9226*(x) + 0.1028*(x**2)
+                xh = 0.0057 + 0.9686*(x)
         elif band_tag==2:#'B6':
             if i_band==0: # sr.b6
                 xh = x.copy()
     return xh
 
+
 datapath = '/fs/scratch/PAS2094/ARF/'
 band_tags = ['B321', 'B754', 'B6']
 unique_year = np.arange(2005,2021)
 
-sensor_list = [7]
-outpath = datapath+'L7_Tiles/'
-#sensor_list = [5,7,8]
-#outpath = datapath+'Harmonized_Tiles/'
+#sensor_list = [7]
+#outpath = datapath+'L7_Tiles/'
+sensor_list = [5,7,8]
+outpath = datapath+'Harmonized_Tiles/'
 
 i = arrayid//6
 j = arrayid-i*6
