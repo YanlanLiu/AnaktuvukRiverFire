@@ -89,3 +89,8 @@ for i in range(7): #7
 
 
 df_oneyear_alltiles[['latitude','longitude']+pft_names].reset_index().to_csv('LC/LC_'+str(y+min(unique_year))+'.csv',index=False)
+
+
+
+
+

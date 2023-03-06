@@ -153,4 +153,3 @@ for band_tag in range(len(band_tags)):
 np.save(outpath+'SR_harmonized_'+str(i)+str(j)+'.npy',SR_harmonized_allbands)
 
 
-

@@ -59,4 +59,3 @@ for year in unique_year[arrayid:arrayid+1]:
 
 
 
-

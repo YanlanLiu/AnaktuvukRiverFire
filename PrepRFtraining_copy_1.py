@@ -64,4 +64,3 @@ for tr in tr_list[arrayid:arrayid+1]: # loop over all the transect csv files
     #training_data_allyears = pd.concat([training_data_allyears,training_data.dropna()])
     training_data.reset_index().drop(columns=['index']).to_csv('Transects/training_data_'+str(year)+'.csv',index=False)
 #    training_data.reset_index().drop(columns=['index']).to_csv('Transects7/training_data_'+str(year)+'.csv',index=False)
-
