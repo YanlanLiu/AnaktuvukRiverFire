@@ -43,7 +43,7 @@ def importance_plot(tree,label):
     plt.barh(width=feat_df['importance'], y=feat_df['feature'])
     plt.xlabel('Relative feature importance')
     plt.title('Variable Importance Plot for' + str(tree));
-    plt.savefig('Figures/Importance_'+label+'.png',dpi=300)
+    plt.savefig('Figures578/Importance_'+label+'.png',dpi=300)
 
 def add_ndvi(training_data):
     training_data['ndvi'] = (training_data['nir'] - training_data['red'])/(training_data['nir'] + training_data['red'])
@@ -52,7 +52,7 @@ def add_ndvi(training_data):
 # import the training data and combine all years
 training_data = pd.DataFrame()
 for y in [2008,2009,2010,2011,2017]:
-    df = pd.read_csv('Transects7/training_data_'+str(y)+'.csv')
+    df = pd.read_csv('Transects578/training_data_'+str(y)+'.csv')
 #    df = pd.read_csv('/Users/colettebrown/Google Drive/Shared drives/AnaktuvukRiverFire/OSC_Code/BKP/Transects7/training_data_'+str(y)+'.csv')
     training_data = pd.concat([training_data,df[df['red']>0]]) # to remove nan for reflectances
     training_data = add_ndvi(training_data)
@@ -165,7 +165,7 @@ plt.hist(y_train, label='Train', alpha=0.2)
 plt.hist(y_test, label = 'Test', alpha=0.2)
 plt.legend()
 plt.title("Distribution of Class for Training, Validation, and Test Data")
-plt.savefig('./Figures/Tr_val_dist.png',dpi=300,bbox_inches='tight')
+plt.savefig('./Figures578/Tr_val_dist.png',dpi=300,bbox_inches='tight')
 
 
 rf_tree = RandomForestClassifier(random_state=2021, n_estimators=150)
@@ -226,8 +226,8 @@ for value in random_seeds:
     rf_val_scores.append(rf_newparams_val_score)
     rf_train_scores.append(rf_newparams_train_score)
     
-    with open('./RFmodels7_label/RFmodels' + str(value) + '.pkl', 'wb') as f:
-#    with open('./RFmodels7_tr/RFmodels' + str(value) + '.pkl', 'wb') as f:
+    with open('./RFmodels578/RFmodels' + str(value) + '.pkl', 'wb') as f:
+#    with open('./RFmodels7_label/RFmodels' + str(value) + '.pkl', 'wb') as f:
         pickle.dump(rf_newparams_forloop, f)
         
 
@@ -238,7 +238,7 @@ rf_feature_importance.boxplot()
 plt.xlabel('Feature')
 plt.ylabel('Importance Values')
 plt.title('Feature Importance Value Distributions (RandomForest, 500)')
-plt.savefig('Figures/Feature_importance.png',dpi=300,bbox_inches='tight')
+plt.savefig('Figures578/Feature_importance.png',dpi=300,bbox_inches='tight')
 
 fig, ax = plt.subplots()
 sns.kdeplot(rf_feature_importance['blue'], ax=ax, label = 'blue')
@@ -250,11 +250,11 @@ sns.kdeplot(rf_feature_importance['sr.b6'], ax=ax, label = 'sr.b6')
 sns.kdeplot(rf_feature_importance['swir2'], ax=ax, label = 'swir2')
 sns.kdeplot(rf_feature_importance['ndvi'], ax=ax, label = 'ndvi').set(title='KDE Plots of Variable Importance (RandomForest, 1000)')
 plt.legend(bbox_to_anchor=(1.05,1.05))
-plt.savefig('Figures/KDE_var_importance.png',dpi=300,bbox_inches='tight')
+plt.savefig('Figures578/KDE_var_importance.png',dpi=300,bbox_inches='tight')
 
 
 
-with open('RFmodels7.pkl', 'wb') as f: 
+with open('RFmodels578.pkl', 'wb') as f: 
     pickle.dump((rf_tree, rf_newparams), f)
 
 
@@ -266,7 +266,7 @@ plt.axvline(np.mean(rf_scores['Validation Scores']), 0,15,
             label='Mean:' + str(np.mean(rf_scores['Validation Scores'])), 
             color='Black', ls='--')
 plt.legend(loc='best')
-plt.savefig('Figures/Validation_scores.png',dpi=300,bbox_inches='tight')
+plt.savefig('Figures578/Validation_scores.png',dpi=300,bbox_inches='tight')
     
 
 

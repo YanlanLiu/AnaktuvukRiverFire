@@ -13,8 +13,8 @@ import imageio
 import os
 import matplotlib.pyplot as plt
 import seaborn as sns; sns.set(style="ticks", color_codes=True,font_scale=1.75)
-arrayid = int(os.environ['SLURM_ARRAY_TASK_ID'])
-#arrayid = 1 # 40
+#arrayid = int(os.environ['SLURM_ARRAY_TASK_ID'])
+arrayid = 19 # 40
 
 def get_qc_pixel(qcpath,i,j,r,c,z):
     QC = np.zeros([r,c,z])
@@ -109,10 +109,10 @@ datapath = '/fs/scratch/PAS2094/ARF/'
 band_tags = ['B321', 'B754', 'B6']
 unique_year = np.arange(2005,2021)
 
-sensor_list = [7]
-outpath = datapath+'L7_Tiles/'
-#sensor_list = [5,7,8]
-#outpath = datapath+'Harmonized_Tiles/'
+#sensor_list = [7]
+#outpath = datapath+'L7_Tiles/'
+sensor_list = [5,7,8]
+outpath = datapath+'L578_Tiles/'
 
 i = arrayid//6
 j = arrayid-i*6
@@ -134,9 +134,11 @@ for band_tag in range(len(band_tags)):
             year = year+[int(itm[:4]) for itm in date]
             
             if i_sensor==sensor_list[0]:
-                SR_band1_all_sensors = Harmanization(SR_band1,i_sensor,band_tag,i_band)
+                SR_band1_all_sensors = SR_band1.copy()
+                #SR_band1_all_sensors = Harmanization(SR_band1,i_sensor,band_tag,i_band)
             else:
-                SR_band1_all_sensors = np.concatenate([SR_band1_all_sensors,Harmanization(SR_band1,i_sensor,band_tag,i_band)],axis=2)
+                SR_band1_all_sensors = np.concatenate([SR_band1_all_sensors,SR_band1],axis=2)
+#                SR_band1_all_sensors = np.concatenate([SR_band1_all_sensors,Harmanization(SR_band1,i_sensor,band_tag,i_band)],axis=2)
             
         
         SR_band1_annual = np.zeros([SR_band1.shape[0],SR_band1.shape[1],len(unique_year)])+np.nan

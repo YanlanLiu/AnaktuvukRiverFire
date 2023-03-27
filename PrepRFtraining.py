@@ -34,7 +34,7 @@ def find_rc(square,SR,lat0,lon0):
 
 datapath = '/fs/scratch/PAS2094/ARF/'
 #outpath = datapath+'Harmonized_Tiles/'
-outpath = datapath+'L7_Tiles/'
+outpath = datapath+'L578_Tiles/'
 transects_path = datapath+'FieldData/'
 unique_year = np.arange(2005,2021)
 tr_list = glob.glob(transects_path+"point*.csv")
@@ -63,5 +63,5 @@ for tr in tr_list[arrayid:arrayid+1]: # loop over all the transect csv files
     training_data = pd.concat([df,pd.DataFrame(sr_list,columns=band_list)],axis=1)
     #training_data_allyears = pd.concat([training_data_allyears,training_data.dropna()])
 #    training_data.reset_index().drop(columns=['index']).to_csv('Transects/training_data_'+str(year)+'.csv',index=False)
-    training_data.reset_index().drop(columns=['index']).to_csv('Transects7/training_data_'+str(year)+'.csv',index=False)
+    training_data.reset_index().drop(columns=['index']).to_csv('Transects578/training_data_'+str(year)+'.csv',index=False)
 

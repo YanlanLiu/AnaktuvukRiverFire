@@ -45,7 +45,7 @@ def LC_Prob(df_onetile,random_seeds,pft_names):
         print(value)
 #        with open('RFmodels7_label/RFmodels' + str(value) + '.pkl', 'rb') as f:
 #        with open('RFmodels7/RFmodels' + str(value) + '.pkl', 'rb') as f:
-        with open('RFmodels7_tr/RFmodels' + str(value) + '.pkl', 'rb') as f:
+        with open('RFmodels578/RFmodels' + str(value) + '.pkl', 'rb') as f:
             rf_newparams = pickle.load(f)
         y_pred = rf_newparams.predict(df_onetile[band_list+['ndvi']]) # the ith trial of RF model (What is put into y_test>>)
         y_num = np.zeros([len(y_pred),])
@@ -58,13 +58,13 @@ def LC_Prob(df_onetile,random_seeds,pft_names):
 
 y = int(os.environ['SLURM_ARRAY_TASK_ID'])
 #y = 0
-random_seeds = list(range(500))
+#random_seeds = list(range(500))
 #random_seeds = list(range(3))
-#random_seeds = list(range(10))
+random_seeds = list(range(10))
 datapath = '/fs/scratch/PAS2094/ARF/'
 #outpath = datapath+'Harmonized_Tiles/'
 #outpath = datapath+'L7_Tiles/'
-outpath = datapath+'L7_Tiles/'
+outpath = datapath+'L578_Tiles/'
 unique_year = np.arange(2005,2021)
 
 band_list = ['red', 'green','blue','swir2','swir1','nir','sr.b6']
@@ -89,5 +89,5 @@ for i in range(7): #7
 
         df_oneyear_alltiles = pd.concat([df_oneyear_alltiles,df_onetile])
 
-df_oneyear_alltiles[['latitude','longitude']+pft_names].reset_index().to_csv('LC7/LC_'+str(y+min(unique_year))+'.csv',index=False)
+df_oneyear_alltiles[['latitude','longitude']+pft_names].reset_index().to_csv('LC578/LC_'+str(y+min(unique_year))+'.csv',index=False)
 #df_oneyear_alltiles[['latitude','longitude']+pft_names].reset_index().to_csv('LC7_tr/LC_'+str(y+min(unique_year))+'.csv',index=False)

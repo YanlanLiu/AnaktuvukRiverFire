@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --time=48:00:00             # total run time limit (HH:MM:SS)
+#SBATCH --time=2:00:00             # total run time limit (HH:MM:SS)
 #SBATCH --ntasks=1                  #
 #SBATCH --mem-per-cpu=16G
 #SBATCH --array=0-16

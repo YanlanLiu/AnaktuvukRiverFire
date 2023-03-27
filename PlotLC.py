@@ -36,14 +36,14 @@ def plot_LC(table,tag,year):
     plt.xlabel('Longitude')
     plt.ylabel('Latitude')
     plt.title(tag +', '+str(year))
-    plt.savefig('Figures7_tr/'+tag+str(year)+'.png',dpi=300,bbox_inches='tight')
+    plt.savefig('Figures578/'+tag+str(year)+'.png',dpi=300,bbox_inches='tight')
 
 
 
 unique_year = np.arange(2005,2021)
 for year in unique_year[arrayid:arrayid+1]:
     print(year)
-    df_lc = pd.read_csv('LC7_tr/LC_'+str(year)+'.csv')
+    df_lc = pd.read_csv('LC578/LC_'+str(year)+'.csv')
     Prob = df_lc[growth_type].values
     df_lc['LC1'] = np.argmax(Prob,axis=1)+1 # landcover type with the highest likelihood, same as np.argsort(Prob,axis=1)[:,-1]
     df_lc['LC2'] = np.argsort(Prob,axis=1)[:,-2]+1 # landcover type with the second highest likelihood
