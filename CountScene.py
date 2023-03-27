@@ -13,8 +13,8 @@ import imageio
 import os
 import matplotlib.pyplot as plt
 import seaborn as sns; sns.set(style="ticks", color_codes=True,font_scale=1.75)
-arrayid = int(os.environ['SLURM_ARRAY_TASK_ID'])
-#arrayid = 1 # 40
+#arrayid = int(os.environ['SLURM_ARRAY_TASK_ID'])
+arrayid = 1 # 40
 
 def get_qc_pixel(qcpath,i,j,r,c,z):
     QC = np.zeros([r,c,z])
@@ -63,47 +63,6 @@ def get_3d_sr(srpath,Btag,i_band,i,j):
     QC = get_qc_pixel(srpath+'QC_PIXEL/',i,j,img0.shape[0],img0.shape[1],len(img_csv))
     return sr_3d, date, QC
 
-def Harmanization(x,sensor, band_tag, i_band):
-    if sensor==8:
-        if band_tag==0: #B321
-            if i_band==0: # red
-                xh = -0.0012 + 1.1592*(x)-0.9166*(x**2)+1.8795*(x**3)
-            elif i_band==1: # green
-                xh = -0.0005 + 1.0412*(x)
-            elif i_band==2: # blue
-                xh = 0.0042 + 1.095*(x) -0.4681*(x**2)
-        elif band_tag==1: #'B754': 
-            if i_band==0: #swir2
-                xh = 0.0028 + 0.9212*(x) + 0.5277*(x**2)-0.8244*(x**3)
-            elif i_band==1: # swir1
-                xh = 0.0071 + 0.9698*(x) + 0.0685*(x**2)
-            elif i_band==2: #nir
-                xh = 0.0221 + 0.8442*(x) + 0.1811*(x**2)
-        elif band_tag==2: #'B6':
-            if i_band==0: # sr.b6
-                xh = x.copy()
-    elif sensor==7:
-        xh = x.copy()
-    elif sensor==5:
-        if band_tag==0:#B321':
-            if i_band==0: # red
-                xh = -0.0068 + 1.0075*(x)
-            elif i_band==1: # green
-                xh = -0.0011 + 0.8733*(x) + 0.3266*(x**2)
-            elif i_band==2: # blue
-                xh = -0.0007 + 0.8288*(x) + 1.8833*(x**2) - 6.0679*(x**3)
-        elif band_tag == 1:#'B754': 
-            if i_band==0: #swir2
-                xh = 0.0025 + 0.924*(x) + 0.3858*(x**2) - 0.5121*(x**3)
-            elif i_band==1: # swir1
-                xh = 0.001 + 0.9791*(x)
-            elif i_band==2: #nir
-                xh = 0.0057 + 0.9686*(x)
-        elif band_tag==2:#'B6':
-            if i_band==0: # sr.b6
-                xh = x.copy()
-    return xh
-
 
 datapath = '/fs/scratch/PAS2094/ARF/'
 band_tags = ['B321', 'B754', 'B6']
@@ -119,7 +78,7 @@ j = arrayid-i*6
 SR_harmonized_allbands = []
 for band_tag in range(len(band_tags)):
     print(band_tag)
-    for i_band in range(len(band_tags[band_tag])-1):
+    for i_band in range(1):#nange(len(band_tags[band_tag])-1):
         # SR_band1_all_sensors = np.array([]) # all sensors, all images
         month = []
         year = []
@@ -134,9 +93,9 @@ for band_tag in range(len(band_tags)):
             year = year+[int(itm[:4]) for itm in date]
             
             if i_sensor==sensor_list[0]:
-                SR_band1_all_sensors = Harmanization(SR_band1,i_sensor,band_tag,i_band)
+                SR_band1_all_sensors = SR_band1.copy()
             else:
-                SR_band1_all_sensors = np.concatenate([SR_band1_all_sensors,Harmanization(SR_band1,i_sensor,band_tag,i_band)],axis=2)
+                SR_band1_all_sensors = np.concatenate([SR_band1_all_sensors,SR_band1],axis=2)
             
         
         SR_band1_annual = np.zeros([SR_band1.shape[0],SR_band1.shape[1],len(unique_year)])+np.nan
@@ -144,13 +103,12 @@ for band_tag in range(len(band_tags)):
         for y in unique_year:
             filter_year =  (month>=6) & (month<=8) & (year==y)
             if sum(filter_year)>0:
-                SR_band1_annual[:,:,y-min(unique_year)] = np.nanmean(SR_band1_all_sensors[:,:,filter_year],axis=2)
+                SR_band1_annual[:,:,y-min(unique_year)] = np.nansum(SR_band1_all_sensors[:,:,filter_year]>0,axis=2)
                 
-    
-        SR_harmonized_allbands.append(SR_band1_annual) # including all bands
+        print([np.nanquantile(SR_band1_annual,qt) for qt in [0.05,0.25,0.5,0.75,0.95]])   
+#        SR_harmonized_allbands.append(SR_band1_annual) # including all bands
 
 
-np.save(outpath+'SR_harmonized_'+str(i)+str(j)+'.npy',SR_harmonized_allbands)
 
 
 

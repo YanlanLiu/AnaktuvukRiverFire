@@ -36,7 +36,6 @@ def get_latlon_2d(i,j,num_rows,num_cols):
 
 def add_ndvi(training_data):
     training_data['ndvi'] = (training_data['nir'] - training_data['red'])/(training_data['nir'] + training_data['red'])
-#     training_data['ndvi'] = (0.0119 + 0.778*training_data['ndvi'] + 0.2017*(training_data['ndvi']**2))
     return training_data
 
 def LC_Prob(df_onetile,random_seeds,pft_names):
@@ -44,7 +43,9 @@ def LC_Prob(df_onetile,random_seeds,pft_names):
     Y = np.zeros([len(df_onetile),len(random_seeds)])# result of 500 models for all pixels in a tile and a year
     for value in random_seeds:
         print(value)
-        with open('RFmodels/RFmodels' + str(value) + '.pkl', 'rb') as f:
+#        with open('RFmodels7_label/RFmodels' + str(value) + '.pkl', 'rb') as f:
+#        with open('RFmodels7/RFmodels' + str(value) + '.pkl', 'rb') as f:
+        with open('RFmodels7_tr/RFmodels' + str(value) + '.pkl', 'rb') as f:
             rf_newparams = pickle.load(f)
         y_pred = rf_newparams.predict(df_onetile[band_list+['ndvi']]) # the ith trial of RF model (What is put into y_test>>)
         y_num = np.zeros([len(y_pred),])
@@ -57,12 +58,13 @@ def LC_Prob(df_onetile,random_seeds,pft_names):
 
 y = int(os.environ['SLURM_ARRAY_TASK_ID'])
 #y = 0
-#random_seeds = list(range(500))
+random_seeds = list(range(500))
 #random_seeds = list(range(3))
-random_seeds = list(range(100))
+#random_seeds = list(range(10))
 datapath = '/fs/scratch/PAS2094/ARF/'
-outpath = datapath+'Harmonized_Tiles/'
+#outpath = datapath+'Harmonized_Tiles/'
 #outpath = datapath+'L7_Tiles/'
+outpath = datapath+'L7_Tiles/'
 unique_year = np.arange(2005,2021)
 
 band_list = ['red', 'green','blue','swir2','swir1','nir','sr.b6']
@@ -87,5 +89,5 @@ for i in range(7): #7
 
         df_oneyear_alltiles = pd.concat([df_oneyear_alltiles,df_onetile])
 
-
-df_oneyear_alltiles[['latitude','longitude']+pft_names].reset_index().to_csv('LC/LC_'+str(y+min(unique_year))+'.csv',index=False)
+df_oneyear_alltiles[['latitude','longitude']+pft_names].reset_index().to_csv('LC7/LC_'+str(y+min(unique_year))+'.csv',index=False)
+#df_oneyear_alltiles[['latitude','longitude']+pft_names].reset_index().to_csv('LC7_tr/LC_'+str(y+min(unique_year))+'.csv',index=False)
